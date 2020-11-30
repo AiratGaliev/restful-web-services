@@ -4,6 +4,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.github.airatgaliev.restfulwebservices.exception.UserNotFoundException;
+import com.github.airatgaliev.restfulwebservices.model.Post;
 import com.github.airatgaliev.restfulwebservices.model.User;
 import com.github.airatgaliev.restfulwebservices.repository.UserRepository;
 import java.net.URI;
@@ -63,5 +64,14 @@ public class UserJpaController {
     if (!user.isPresent()) {
       throw new UserNotFoundException("Don't found user by id: " + id);
     }
+  }
+
+  @GetMapping("/users/{id}/posts")
+  public List<Post> retrieveUserPosts(@PathVariable Integer id) {
+    Optional<User> user = userRepository.findById(id);
+    if (!user.isPresent()) {
+      throw new UserNotFoundException("Don't found user by id: " + id);
+    }
+    return user.get().getPosts();
   }
 }

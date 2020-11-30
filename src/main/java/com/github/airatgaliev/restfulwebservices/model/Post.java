@@ -1,5 +1,6 @@
 package com.github.airatgaliev.restfulwebservices.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -15,6 +16,7 @@ public class Post {
   private String description;
 
   @ManyToOne(fetch = FetchType.LAZY)
+  @JsonIgnore
   private User user;
 
   public Integer getId() {
