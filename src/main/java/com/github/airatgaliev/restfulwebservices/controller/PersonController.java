@@ -18,4 +18,34 @@ public class PersonController {
   public PersonV2 personV2() {
     return new PersonV2(new Name("Airat", "Galiev"));
   }
+
+  @GetMapping(value = "/person/param", params = "v=1")
+  public PersonV1 paramV1() {
+    return new PersonV1("Airat Galiev");
+  }
+
+  @GetMapping(value = "/person/param", params = "v=2")
+  public PersonV2 paramV2() {
+    return new PersonV2(new Name("Airat", "Galiev"));
+  }
+
+  @GetMapping(value = "/person/header", headers = "X-API-VERSION=1")
+  public PersonV1 headerV1() {
+    return new PersonV1("Airat Galiev");
+  }
+
+  @GetMapping(value = "/person/header", headers = "X-API-VERSION=2")
+  public PersonV2 headerV2() {
+    return new PersonV2(new Name("Airat", "Galiev"));
+  }
+
+  @GetMapping(value = "/person/produces", produces = "application/vnd.company.app-v1+json")
+  public PersonV1 producesV1() {
+    return new PersonV1("Airat Galiev");
+  }
+
+  @GetMapping(value = "/person/produces", produces = "application/vnd.company.app-v2+json")
+  public PersonV2 producesV2() {
+    return new PersonV2(new Name("Airat", "Galiev"));
+  }
 }
