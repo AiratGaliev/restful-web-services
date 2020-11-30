@@ -1,0 +1,46 @@
+package com.github.airatgaliev.restfulwebservices.controller;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+import com.github.airatgaliev.restfulwebservices.exception.UserNotFoundException;
+import com.github.airatgaliev.restfulwebservices.model.User;
+import com.github.airatgaliev.restfulwebservices.repository.UserRepository;
+import com.github.airatgaliev.restfulwebservices.service.UserService;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/jpa")
+public class UserJpaController {
+
+  @Autowired
+  private UserService userService;
+
+  @Autowired
+  private UserRepository userRepository;
+
+  @GetMapping("/users")
+  public List<User> retrieveAllUsers() {
+    return userRepository.findAll();
+  }
+
+  @GetMapping("/users/{id}")
+  public EntityModel<User> retrieveUser(@PathVariable Integer id) {
+    Optional<User> user = userRepository.findById(id);
+    if (!user.isPresent()) {
+      throw new UserNotFoundException("Don't found user by id: " + id);
+    }
+    EntityModel<User> userEntityModel = new EntityModel<>(user.get());
+    WebMvcLinkBuilder link = linkTo(methodOn(this.getClass()).retrieveAllUsers());
+    userEntityModel.add(link.withRel("all-users"));
+    return userEntityModel;
+  }
+}
